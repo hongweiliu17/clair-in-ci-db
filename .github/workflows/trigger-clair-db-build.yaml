@@ -5,7 +5,7 @@ name: Trigger clair db image build
 
 on:
   schedule:
-    - cron: '30 * * * *'
+    - cron: '50 * * * *'
   workflow_dispatch:
 
 permissions:
@@ -27,7 +27,7 @@ jobs:
     - name: Run Clair-Action to update DB
       uses: docker://quay.io/projectquay/clair-action:v0.0.11@sha256:80486643baad47f2ac606e5c0e5274f296c08464aebb3dc90f97f22ba92505dd
       with:
-        args: update --level info
+        args: /bin/clair-action --level info update
       env:
         DB_PATH: /tmp/matcher.db
     - name: Download DB from container to runner
@@ -45,7 +45,7 @@ jobs:
         git add ./clair-db/matcher.db
         if ! git diff --staged --quiet; then
           git commit -m "chore: update Clair DB snapshot $(date -u +'%Y-%m-%d')"
-          git push
+          git push origin "${SOURCE_BRANCH}" -f
           echo "✅ Database updated and pushed."
         else
           echo "ℹ️  Database is up-to-date. No changes to commit."
