@@ -8,9 +8,6 @@ RUN rpm --import /cachi2/output/deps/generic/RPM-GPG-KEY-EPEL-8 && \
     jq-1.6-11.el8_10 && \
     microdnf clean all
 
-# Verify GPG keys are present
-RUN ls /etc/pki/rpm-gpg
-
 COPY clair-db/matcher.db /tmp/matcher.db
 ENV DB_PATH=/tmp/matcher.db
 

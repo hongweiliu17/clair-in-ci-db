@@ -41,6 +41,7 @@ jobs:
         git config --global user.email "<>"
         git config --global user.name "daily-build-trigger"
 
+        ls -al ./clair-db/matcher.db
         git add ./clair-db/matcher.db
         if ! git diff --staged --quiet; then
           git commit -m "chore: update Clair DB snapshot $(date -u +'%Y-%m-%d')"
