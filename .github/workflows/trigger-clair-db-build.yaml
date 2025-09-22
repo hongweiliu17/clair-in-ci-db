@@ -24,19 +24,18 @@ jobs:
       uses: actions/checkout@v4
       with:
         ref: 'main'
-    - name: Run Clair-Action to update DB
-      uses: docker://quay.io/projectquay/clair-action:v0.0.11@sha256:80486643baad47f2ac606e5c0e5274f296c08464aebb3dc90f97f22ba92505dd
-      with:
-        args: /bin/clair-action --level info update
-      env:
-        DB_PATH: /tmp/matcher.db
-    - name: Download DB from container to runner
+    - name: Update Clair Database
       run: |
-        container_id=$(docker ps -lq)
-        docker cp $container_id:/tmp/matcher.db ./clair-db/matcher.db
+        mkdir -p clair-db
 
-        ls -la ./clair-db/matcher.db
-        file ./clair-db/matcher.db || exit 1
+        docker run --rm \
+          -v $(pwd)/clair-db:/output \
+          -e DB_PATH=/output/matcher.db \
+          quay.io/projectquay/clair-action:v0.0.11@sha256:80486643baad47f2ac606e5c0e5274f296c08464aebb3dc90f97f22ba92505dd \
+          /bin/clair-action --level info update
+
+        ls -la clair-db/matcher.db
+        file clair-db/matcher.db
     - name: Commit and push if changed
       run: |
         git config --global user.email "<>"
