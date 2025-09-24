@@ -5,7 +5,7 @@ name: Trigger clair db image build
 
 on:
   schedule:
-    - cron: '50 * * * *'
+    - cron: '0 4 * * *'
   workflow_dispatch:
 
 permissions:
