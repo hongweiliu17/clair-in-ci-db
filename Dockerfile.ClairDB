@@ -1,0 +1,3 @@
+FROM quay.io/projectquay/clair-action:v0.0.11
+
+RUN DB_PATH=/tmp/matcher.db /bin/clair-action --level info update
